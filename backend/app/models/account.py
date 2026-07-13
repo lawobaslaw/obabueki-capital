@@ -1,22 +1,21 @@
-from uuid import UUID, uuid4
-
+from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
+from app.database.mixins import TimestampMixin, UUIDMixin
+
+if TYPE_CHECKING:
+    from app.models.portfolio import Portfolio
 
 
-class Account(Base):
+class Account(UUIDMixin, TimestampMixin, Base):
+    """Represents an investment account."""
+
     __tablename__ = "accounts"
 
-    id: Mapped[UUID] = mapped_column(
-        PG_UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-    )
-
-    portfolio_id: Mapped[UUID] = mapped_column(
+    portfolio_id: Mapped[str] = mapped_column(
         PG_UUID(as_uuid=True),
         ForeignKey("portfolios.id"),
         nullable=False,

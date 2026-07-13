@@ -1,23 +1,22 @@
-from typing import List
-from uuid import UUID, uuid4
-
+from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
+from app.database.mixins import TimestampMixin, UUIDMixin
+
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.account import Account
 
 
-class Portfolio(Base):
+class Portfolio(UUIDMixin, TimestampMixin, Base):
+    """Represents an investment portfolio."""
+
     __tablename__ = "portfolios"
 
-    id: Mapped[UUID] = mapped_column(
-        PG_UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-    )
-
-    user_id: Mapped[UUID] = mapped_column(
+    user_id: Mapped[str] = mapped_column(
         PG_UUID(as_uuid=True),
         ForeignKey("users.id"),
         nullable=False,
@@ -30,15 +29,15 @@ class Portfolio(Base):
 
     base_currency: Mapped[str] = mapped_column(
         String(3),
-        nullable=False,
         default="NGN",
+        nullable=False,
     )
 
     user: Mapped["User"] = relationship(
         back_populates="portfolios",
     )
 
-    accounts: Mapped[List["Account"]] = relationship(
+    accounts: Mapped[list["Account"]] = relationship(
         back_populates="portfolio",
         cascade="all, delete-orphan",
     )

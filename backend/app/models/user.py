@@ -1,21 +1,18 @@
-from typing import List
-from uuid import UUID, uuid4
-
+from typing import TYPE_CHECKING
 from sqlalchemy import Boolean, String
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
+from app.database.mixins import TimestampMixin, UUIDMixin
+
+if TYPE_CHECKING:
+    from app.models.portfolio import Portfolio
 
 
-class User(Base):
+class User(UUIDMixin, TimestampMixin, Base):
+    """Represents an application user."""
+
     __tablename__ = "users"
-
-    id: Mapped[UUID] = mapped_column(
-        PG_UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-    )
 
     email: Mapped[str] = mapped_column(
         String(255),
@@ -45,7 +42,7 @@ class User(Base):
         nullable=False,
     )
 
-    portfolios: Mapped[List["Portfolio"]] = relationship(
+    portfolios: Mapped[list["Portfolio"]] = relationship(
         back_populates="user",
         cascade="all, delete-orphan",
     )

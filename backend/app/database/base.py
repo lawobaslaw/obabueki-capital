@@ -1,6 +1,7 @@
 from sqlalchemy.orm import DeclarativeBase
 
+from app.database.naming import metadata
+
 
 class Base(DeclarativeBase):
-    """Base class for all ORM models."""
-    pass
+    metadata = metadata
