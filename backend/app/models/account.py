@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+from uuid import UUID
+
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -15,7 +17,7 @@ class Account(UUIDMixin, TimestampMixin, Base):
 
     __tablename__ = "accounts"
 
-    portfolio_id: Mapped[str] = mapped_column(
+    portfolio_id: Mapped[UUID] = mapped_column(
         PG_UUID(as_uuid=True),
         ForeignKey("portfolios.id"),
         nullable=False,
@@ -43,4 +45,13 @@ class Account(UUIDMixin, TimestampMixin, Base):
 
     portfolio: Mapped["Portfolio"] = relationship(
         back_populates="accounts",
+        lazy="selectin",
     )
+
+    def __repr__(self) -> str:
+        return (
+            f"Account("
+            f"id={self.id}, "
+            f"name='{self.name}', "
+            f"institution='{self.institution}')"
+        )
