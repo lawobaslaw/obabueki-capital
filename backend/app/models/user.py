@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from sqlalchemy import Boolean, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -45,4 +46,12 @@ class User(UUIDMixin, TimestampMixin, Base):
     portfolios: Mapped[list["Portfolio"]] = relationship(
         back_populates="user",
         cascade="all, delete-orphan",
+        lazy="selectin",
     )
+
+    def __repr__(self) -> str:
+        return (
+            f"User(id={self.id}, "
+            f"email='{self.email}', "
+            f"is_active={self.is_active})"
+        )
