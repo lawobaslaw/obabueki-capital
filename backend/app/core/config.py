@@ -9,6 +9,10 @@ class Settings(BaseSettings):
     environment: str
     debug: bool
 
+    secret_key: str
+    access_token_expire_minutes: int = 30
+    algorithm: str = "HS256"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         extra="ignore",

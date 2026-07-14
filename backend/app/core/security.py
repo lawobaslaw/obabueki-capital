@@ -1,33 +1,29 @@
 from datetime import datetime, timedelta, timezone
 
-from jose import jwt
 import bcrypt
+from jose import jwt
 
-SECRET_KEY = "CHANGE_ME_IN_ENV"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+from app.core.config import settings
 
 
 def hash_password(password: str) -> str:
-    """Hash a plaintext password."""
     return bcrypt.hashpw(
-        password.encode("utf-8"),
+        password.encode(),
         bcrypt.gensalt(),
-    ).decode("utf-8")
+    ).decode()
 
 
 def verify_password(password: str, password_hash: str) -> bool:
-    """Verify a plaintext password."""
     return bcrypt.checkpw(
-        password.encode("utf-8"),
-        password_hash.encode("utf-8"),
+        password.encode(),
+        password_hash.encode(),
     )
 
 
 def create_access_token(subject: str) -> str:
-    """Create a JWT access token."""
-
-    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=settings.access_token_expire_minutes
+    )
 
     payload = {
         "sub": subject,
@@ -36,6 +32,6 @@ def create_access_token(subject: str) -> str:
 
     return jwt.encode(
         payload,
-        SECRET_KEY,
-        algorithm=ALGORITHM,
+        settings.secret_key,
+        algorithm=settings.algorithm,
     )
