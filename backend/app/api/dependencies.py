@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.database.session import get_db
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
+from fastapi.security import OAuth2PasswordBearer
 
 
 def get_user_repository(
@@ -20,3 +21,8 @@ def get_auth_service(
     """Provide an AuthService instance."""
 
     return AuthService(user_repository)
+
+
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/auth/login",
+)
