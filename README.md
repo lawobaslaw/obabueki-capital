@@ -1,5 +1,7 @@
 # Obabueki Capital
+
 ![CI](https://github.com/lawobaslaw/obabueki-capital/actions/workflows/backend-ci.yml/badge.svg)
+
 A modern wealth management platform built with FastAPI, React, PostgreSQL and Docker.
 
 ## Features
