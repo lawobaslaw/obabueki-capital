@@ -30,14 +30,14 @@ class PortfolioService:
 
         normalized_name = name.strip().lower()
         for portfolio in existing_portfolios:
-            if portfolio.name.lower() == normalized_name:
+            if portfolio.name.strip().lower() == normalized_name:
                 raise DuplicatePortfolioError("Portfolio name already exists.")
 
         portfolio = Portfolio(
             user_id=current_user.id,
             name=name.strip(),
             description=description,
-            base_currency=base_currency,
+            base_currency=base_currency.upper(),
         )
 
         return self.portfolio_repository.create(portfolio)
@@ -82,3 +82,38 @@ class PortfolioService:
         )
 
         self.portfolio_repository.delete(portfolio)
+
+    def update(
+        self,
+        portfolio_id: UUID,
+        current_user: User,
+        name: str | None,
+        description: str | None,
+        base_currency: str | None,
+    ) -> Portfolio:
+        """Update a portfolio."""
+
+        portfolio = self.get(
+            portfolio_id,
+            current_user,
+        )
+
+        if name is not None:
+            normalized_name = name.strip().lower()
+
+            for existing in self.portfolio_repository.list_by_user_id(current_user.id):
+                if (
+                    existing.id != portfolio.id
+                    and existing.name.strip().lower() == normalized_name
+                ):
+                    raise DuplicatePortfolioError("Portfolio name already exists.")
+
+        portfolio.name = name.strip()
+
+        if description is not None:
+            portfolio.description = description
+
+        if base_currency is not None:
+            portfolio.base_currency = base_currency.upper()
+
+        return self.portfolio_repository.save(portfolio)

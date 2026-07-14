@@ -29,9 +29,14 @@ class Portfolio(UUIDMixin, TimestampMixin, Base):
         nullable=False,
     )
 
+    description: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+
     base_currency: Mapped[str] = mapped_column(
         String(3),
-        default="NGN",
+        default="GBP",
         nullable=False,
     )
 
@@ -51,5 +56,6 @@ class Portfolio(UUIDMixin, TimestampMixin, Base):
             f"Portfolio("
             f"id={self.id}, "
             f"name='{self.name}', "
+            f"description='{self.description}', "
             f"base_currency='{self.base_currency}')"
         )
