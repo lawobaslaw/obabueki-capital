@@ -7,6 +7,7 @@ from jose import JWTError, jwt
 from app.core.config import settings
 from app.exceptions.auth import InvalidCredentialsError
 
+
 def hash_password(password: str) -> str:
     """Hash a plaintext password."""
     return bcrypt.hashpw(
@@ -43,7 +44,6 @@ def create_access_token(subject: str) -> str:
 
 def decode_access_token(token: str) -> dict:
     """Decode and validate a JWT access token."""
-
     try:
         payload = jwt.decode(
             token,
@@ -51,7 +51,9 @@ def decode_access_token(token: str) -> dict:
             algorithms=[settings.algorithm],
         )
 
-        return payload
+        if "sub" not in payload:
+            raise InvalidCredentialsError("Invalid token.")
 
+        return payload
     except JWTError as exc:
         raise InvalidCredentialsError("Invalid token.") from exc
