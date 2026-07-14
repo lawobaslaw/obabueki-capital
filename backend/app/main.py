@@ -12,6 +12,7 @@ app.include_router(auth_router)
 for route in auth_router.routes:
     print(route.path, route.methods)
 
+
 @app.get("/")
 def root():
     return {
