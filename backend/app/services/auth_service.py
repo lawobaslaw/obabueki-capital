@@ -3,17 +3,21 @@ from app.core.security import (
     hash_password,
     verify_password,
 )
+from app.exceptions.auth import (
+    DuplicateEmailError,
+    InvalidCredentialsError,
+)
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
-from app.exceptions.auth import DuplicateEmailError, InvalidCredentialsError
+
 
 class AuthService:
     """Business logic for authentication."""
 
     def __init__(
-    self,
-    user_repository: UserRepository,
-) -> None:
+        self,
+        user_repository: UserRepository,
+    ) -> None:
         self.user_repository = user_repository
 
     def register(
@@ -28,7 +32,6 @@ class AuthService:
         if self.user_repository.get_by_email(email):
             raise DuplicateEmailError("Email already registered.")
 
-        
         user = User(
             email=email,
             password_hash=hash_password(password),
