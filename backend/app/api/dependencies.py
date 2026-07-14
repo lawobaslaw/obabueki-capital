@@ -1,0 +1,22 @@
+from fastapi import Depends
+from sqlalchemy.orm import Session
+
+from app.database.session import get_db
+from app.repositories.user_repository import UserRepository
+from app.services.auth_service import AuthService
+
+
+def get_user_repository(
+    db: Session = Depends(get_db),
+) -> UserRepository:
+    """Provide a UserRepository instance."""
+
+    return UserRepository(db)
+
+
+def get_auth_service(
+    user_repository: UserRepository = Depends(get_user_repository),
+) -> AuthService:
+    """Provide an AuthService instance."""
+
+    return AuthService(user_repository)

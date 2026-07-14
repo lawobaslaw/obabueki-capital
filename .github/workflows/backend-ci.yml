@@ -29,6 +29,8 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: backend/requirements-dev.txt
 
       - name: Install dependencies
         run: |
@@ -42,21 +44,6 @@ jobs:
       - name: Black
         run: |
           black --check .
-
-      - name: Debug Python environment
-        run: |
-          pwd
-          ls -la
-          python --version
-
-          echo "=== sys.path ==="
-          python -c "import sys; print('\n'.join(sys.path))"
-
-           echo "=== cwd ==="
-           python -c "import os; print(os.getcwd())"
-
-          echo "=== import test ==="
-          python -c "from app.main import app; print('IMPORT SUCCESS')"
 
       - name: Pytest
         run: |
