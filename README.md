@@ -33,7 +33,8 @@ Docker + Azure
 
 v0.1.0 ✅ Foundation
 
-v0.2.0 🚧 Database Foundation
+v0.2.0 ✅ Database Foundation
 
-v0.3.0 Authentication
-...
+v0.3.0 ✅ Authentication
+
+
