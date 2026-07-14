@@ -1,24 +1,58 @@
-from uuid import UUID
+from fastapi import APIRouter, Depends, HTTPException, status
 
-from pydantic import BaseModel, ConfigDict
+from app.api.dependencies import (
+    get_current_user,
+    get_portfolio_service,
+)
+from app.exceptions.portfolio import DuplicatePortfolioError
+from app.models.user import User
+from app.schemas.portfolio import (
+    PortfolioCreate,
+    PortfolioResponse,
+)
+from app.services.portfolio_service import PortfolioService
+
+router = APIRouter(
+    prefix="/portfolios",
+    tags=["Portfolios"],
+)
 
 
-class PortfolioCreate(BaseModel):
-    name: str
-    description: str | None = None
-    base_currency: str = "GBP"
+@router.post(
+    "",
+    response_model=PortfolioResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_portfolio(
+    request: PortfolioCreate,
+    current_user: User = Depends(get_current_user),
+    portfolio_service: PortfolioService = Depends(
+        get_portfolio_service,
+    ),
+):
+    try:
+        return portfolio_service.create(
+            current_user=current_user,
+            name=request.name,
+            description=request.description,
+            base_currency=request.base_currency,
+        )
+
+    except DuplicatePortfolioError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
 
 
-class PortfolioUpdate(BaseModel):
-    name: str | None = None
-    description: str | None = None
-    base_currency: str | None = None
-
-
-class PortfolioResponse(BaseModel):
-    id: UUID
-    name: str
-    description: str | None
-    base_currency: str
-
-    model_config = ConfigDict(from_attributes=True)
+@router.get(
+    "",
+    response_model=list[PortfolioResponse],
+)
+def list_portfolios(
+    current_user: User = Depends(get_current_user),
+    portfolio_service: PortfolioService = Depends(
+        get_portfolio_service,
+    ),
+):
+    return portfolio_service.list(current_user)

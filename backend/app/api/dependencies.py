@@ -9,6 +9,8 @@ from fastapi.security import OAuth2PasswordBearer
 from app.exceptions.auth import InvalidCredentialsError
 from app.models.user import User
 from app.core.security import decode_access_token
+from app.repositories.portfolio_repository import PortfolioRepository
+from app.services.portfolio_service import PortfolioService
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login",
@@ -50,3 +52,21 @@ def get_current_user(
         raise InvalidCredentialsError("User not found.")
 
     return user
+
+
+def get_portfolio_repository(
+    db: Session = Depends(get_db),
+) -> PortfolioRepository:
+    """Provide a PortfolioRepository instance."""
+
+    return PortfolioRepository(db)
+
+
+def get_portfolio_service(
+    portfolio_repository: PortfolioRepository = Depends(
+        get_portfolio_repository,
+    ),
+) -> PortfolioService:
+    """Provide a PortfolioService instance."""
+
+    return PortfolioService(portfolio_repository)
