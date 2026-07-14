@@ -43,6 +43,21 @@ jobs:
         run: |
           black --check .
 
+      - name: Debug Python environment
+        run: |
+          pwd
+          ls -la
+          python --version
+
+          echo "=== sys.path ==="
+          python -c "import sys; print('\n'.join(sys.path))"
+
+           echo "=== cwd ==="
+           python -c "import os; print(os.getcwd())"
+
+          echo "=== import test ==="
+          python -c "from app.main import app; print('IMPORT SUCCESS')"
+
       - name: Pytest
         run: |
           pytest
