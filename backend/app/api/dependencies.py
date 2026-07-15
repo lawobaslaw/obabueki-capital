@@ -4,6 +4,17 @@ from sqlalchemy.orm import Session
 from app.database.session import get_db
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
+from fastapi.security import OAuth2PasswordBearer
+
+from app.exceptions.auth import InvalidCredentialsError
+from app.models.user import User
+from app.core.security import decode_access_token
+from app.repositories.portfolio_repository import PortfolioRepository
+from app.services.portfolio_service import PortfolioService
+
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/auth/login",
+)
 
 
 def get_user_repository(
@@ -20,3 +31,42 @@ def get_auth_service(
     """Provide an AuthService instance."""
 
     return AuthService(user_repository)
+
+
+def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    user_repository: UserRepository = Depends(get_user_repository),
+) -> User:
+    """Return the authenticated user."""
+
+    payload = decode_access_token(token)
+
+    email = payload.get("sub")
+
+    if not email:
+        raise InvalidCredentialsError("Invalid token.")
+
+    user = user_repository.get_by_email(email)
+
+    if user is None:
+        raise InvalidCredentialsError("User not found.")
+
+    return user
+
+
+def get_portfolio_repository(
+    db: Session = Depends(get_db),
+) -> PortfolioRepository:
+    """Provide a PortfolioRepository instance."""
+
+    return PortfolioRepository(db)
+
+
+def get_portfolio_service(
+    portfolio_repository: PortfolioRepository = Depends(
+        get_portfolio_repository,
+    ),
+) -> PortfolioService:
+    """Provide a PortfolioService instance."""
+
+    return PortfolioService(portfolio_repository)
