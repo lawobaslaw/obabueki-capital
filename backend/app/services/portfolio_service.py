@@ -108,7 +108,7 @@ class PortfolioService:
                 ):
                     raise DuplicatePortfolioError("Portfolio name already exists.")
 
-        portfolio.name = name.strip()
+            portfolio.name = name.strip()
 
         if description is not None:
             portfolio.description = description
