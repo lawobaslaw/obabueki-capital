@@ -11,6 +11,8 @@ from app.models.user import User
 from app.core.security import decode_access_token
 from app.repositories.portfolio_repository import PortfolioRepository
 from app.services.portfolio_service import PortfolioService
+from app.repositories.account_repository import AccountRepository
+from app.services.account_service import AccountService
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login",
@@ -70,3 +72,27 @@ def get_portfolio_service(
     """Provide a PortfolioService instance."""
 
     return PortfolioService(portfolio_repository)
+
+
+def get_account_repository(
+    session: Session = Depends(get_db),
+) -> AccountRepository:
+    """Return an AccountRepository."""
+
+    return AccountRepository(session)
+
+
+def get_account_service(
+    account_repository: AccountRepository = Depends(
+        get_account_repository,
+    ),
+    portfolio_repository: PortfolioRepository = Depends(
+        get_portfolio_repository,
+    ),
+) -> AccountService:
+    """Return an AccountService."""
+
+    return AccountService(
+        account_repository=account_repository,
+        portfolio_repository=portfolio_repository,
+    )
