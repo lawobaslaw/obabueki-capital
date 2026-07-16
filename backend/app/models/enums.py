@@ -10,3 +10,14 @@ class AccountType(str, Enum):
     SAVINGS = "SAVINGS"
     CRYPTO = "CRYPTO"
     CASH = "CASH"
+
+
+class TransactionType(str, Enum):
+    """Supported transaction types."""
+
+    BUY = "BUY"
+    SELL = "SELL"
+    DIVIDEND = "DIVIDEND"
+    DEPOSIT = "DEPOSIT"
+    WITHDRAWAL = "WITHDRAWAL"
+    FEE = "FEE"

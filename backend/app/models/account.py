@@ -11,6 +11,7 @@ from app.models.enums import AccountType
 
 if TYPE_CHECKING:
     from app.models.portfolio import Portfolio
+    from app.models.transaction import Transaction
 
 
 class Account(UUIDMixin, TimestampMixin, Base):
@@ -53,6 +54,12 @@ class Account(UUIDMixin, TimestampMixin, Base):
 
     portfolio: Mapped["Portfolio"] = relationship(
         back_populates="accounts",
+        lazy="selectin",
+    )
+
+    transactions: Mapped[list["Transaction"]] = relationship(
+        back_populates="account",
+        cascade="all, delete-orphan",
         lazy="selectin",
     )
 

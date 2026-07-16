@@ -4,6 +4,7 @@ from app.api.auth import router as auth_router
 from app.api.users import router as users_router
 from app.api.portfolio import router as portfolio_router
 from app.api.account import router as account_router
+from app.api.transaction import router as transaction_router
 
 app = FastAPI(
     title="Obabueki Capital API",
@@ -15,6 +16,7 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(portfolio_router)
 app.include_router(account_router)
+app.include_router(transaction_router)
 
 
 @app.get("/")
