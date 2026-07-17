@@ -1,5 +1,5 @@
 from uuid import uuid4
-
+from datetime import UTC, datetime
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -41,3 +41,59 @@ def auth_headers() -> dict[str, str]:
     return {
         "Authorization": f"Bearer {token}",
     }
+
+
+def create_portfolio(headers: dict) -> str:
+    response = client.post(
+        "/portfolios",
+        json={
+            "name": "Retirement",
+            "description": "Long-term investing",
+            "base_currency": "GBP",
+        },
+        headers=headers,
+    )
+
+    assert response.status_code == 201
+
+    return response.json()["id"]
+
+
+def create_account(headers: dict) -> str:
+    portfolio_id = create_portfolio(headers)
+
+    response = client.post(
+        f"/accounts/portfolio/{portfolio_id}",
+        json={
+            "name": "Trading 212",
+            "broker": "Trading 212",
+            "account_type": "BROKERAGE",
+            "currency": "GBP",
+            "is_default": True,
+        },
+        headers=headers,
+    )
+
+    assert response.status_code == 201
+
+    return response.json()["id"]
+
+
+def create_transaction(headers: dict, account_id: str) -> dict:
+    response = client.post(
+        f"/transactions/account/{account_id}",
+        json={
+            "transaction_type": "BUY",
+            "symbol": "AAPL",
+            "quantity": "10",
+            "price": "150",
+            "fees": "1.50",
+            "currency": "GBP",
+            "transaction_date": datetime.now(UTC).isoformat(),
+        },
+        headers=headers,
+    )
+
+    assert response.status_code == 201
+
+    return response.json()

@@ -13,6 +13,8 @@ from app.repositories.portfolio_repository import PortfolioRepository
 from app.services.portfolio_service import PortfolioService
 from app.repositories.account_repository import AccountRepository
 from app.services.account_service import AccountService
+from app.repositories.transaction_repository import TransactionRepository
+from app.services.transaction_service import TransactionService
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login",
@@ -95,4 +97,28 @@ def get_account_service(
     return AccountService(
         account_repository=account_repository,
         portfolio_repository=portfolio_repository,
+    )
+
+
+def get_transaction_repository(
+    session: Session = Depends(get_db),
+) -> TransactionRepository:
+    """Return a TransactionRepository."""
+
+    return TransactionRepository(session)
+
+
+def get_transaction_service(
+    account_repository: AccountRepository = Depends(
+        get_account_repository,
+    ),
+    transaction_repository: TransactionRepository = Depends(
+        get_transaction_repository,
+    ),
+) -> TransactionService:
+    """Return a TransactionService."""
+
+    return TransactionService(
+        account_repository=account_repository,
+        transaction_repository=transaction_repository,
     )
