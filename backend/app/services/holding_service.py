@@ -1,4 +1,6 @@
 from uuid import UUID
+from decimal import Decimal
+
 
 from app.repositories.transaction_repository import TransactionRepository
 from app.repositories.account_repository import AccountRepository
@@ -33,5 +35,42 @@ class HoldingService:
 
         transactions = self.transaction_repository.list_by_account(account_id)
 
-        # Calculation logic will be added in the next milestone.
-        return []
+        holdings: dict[str, dict] = {}
+
+        for transaction in transactions:
+            if transaction.transaction_type.name != "BUY":
+                continue
+
+            symbol = transaction.symbol
+
+            if symbol is None:
+                continue
+
+            quantity = transaction.quantity or Decimal("0")
+            price = transaction.price or Decimal("0")
+
+            total_cost = quantity * price + transaction.fees
+
+            holdings[symbol] = {
+                "symbol": symbol,
+                "quantity": quantity,
+                "total_cost": total_cost,
+                "currency": transaction.currency,
+            }
+
+        results: list[HoldingResponse] = []
+
+        for holding in holdings.values():
+            average_cost = holding["total_cost"] / holding["quantity"]
+
+            results.append(
+                HoldingResponse(
+                    symbol=holding["symbol"],
+                    quantity=holding["quantity"],
+                    average_cost=average_cost,
+                    cost_basis=holding["total_cost"],
+                    currency=holding["currency"],
+                )
+            )
+
+        return results
