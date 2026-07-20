@@ -44,11 +44,7 @@ def test_buy_transaction_creates_holding():
 
     assert response.status_code == 200
 
-    data = response.json()
-
-    assert len(data) == 1
-
-    holding = data[0]
+    holding = response.json()[0]
 
     assert holding["symbol"] == "AAPL"
     assert Decimal(holding["quantity"]) == Decimal("10")
@@ -126,14 +122,43 @@ def test_sell_transaction_reduces_quantity():
         headers=headers,
     )
 
-    assert response.status_code == 200
-
-    data = response.json()
-
-    assert len(data) == 1
-
-    holding = data[0]
+    holding = response.json()[0]
 
     assert Decimal(holding["quantity"]) == Decimal("6")
     assert Decimal(holding["average_cost"]) == Decimal("150.15")
     assert Decimal(holding["cost_basis"]) == Decimal("900.90")
+
+
+def test_sell_all_shares_removes_holding():
+    headers = auth_headers()
+
+    account_id = create_account(headers)
+
+    create_transaction(
+        headers=headers,
+        account_id=account_id,
+    )
+
+    response = client.post(
+        f"/transactions/account/{account_id}",
+        headers=headers,
+        json={
+            "transaction_type": "SELL",
+            "symbol": "AAPL",
+            "quantity": "10",
+            "price": "160",
+            "fees": "0.00",
+            "currency": "GBP",
+            "transaction_date": datetime.now(UTC).isoformat(),
+        },
+    )
+
+    assert response.status_code == 201
+
+    response = client.get(
+        f"/accounts/{account_id}/holdings",
+        headers=headers,
+    )
+
+    assert response.status_code == 200
+    assert response.json() == []
