@@ -1,12 +1,11 @@
-from uuid import UUID
 from decimal import Decimal
+from uuid import UUID
 
-
-from app.repositories.transaction_repository import TransactionRepository
-from app.repositories.account_repository import AccountRepository
-from app.models.user import User
-from app.schemas.holding import HoldingResponse
 from app.exceptions.account import AccountNotFoundError
+from app.models.user import User
+from app.repositories.account_repository import AccountRepository
+from app.repositories.transaction_repository import TransactionRepository
+from app.schemas.holding import HoldingResponse
 
 
 class HoldingService:
@@ -35,40 +34,47 @@ class HoldingService:
 
         transactions = self.transaction_repository.list_by_account(account_id)
 
-        holdings: dict[str, dict] = {}
+        holdings: dict[str, dict[str, Decimal | str]] = {}
 
         for transaction in transactions:
             if transaction.transaction_type.name != "BUY":
                 continue
 
-            symbol = transaction.symbol
-
-            if symbol is None:
+            if transaction.symbol is None:
                 continue
+
+            symbol = transaction.symbol
 
             quantity = transaction.quantity or Decimal("0")
             price = transaction.price or Decimal("0")
+            fees = transaction.fees or Decimal("0")
 
-            total_cost = quantity * price + transaction.fees
+            total_cost = (quantity * price) + fees
 
-            holdings[symbol] = {
-                "symbol": symbol,
-                "quantity": quantity,
-                "total_cost": total_cost,
-                "currency": transaction.currency,
-            }
+            if symbol not in holdings:
+                holdings[symbol] = {
+                    "quantity": Decimal("0"),
+                    "total_cost": Decimal("0"),
+                    "currency": transaction.currency,
+                }
+
+            holdings[symbol]["quantity"] += quantity
+            holdings[symbol]["total_cost"] += total_cost
 
         results: list[HoldingResponse] = []
 
-        for holding in holdings.values():
-            average_cost = holding["total_cost"] / holding["quantity"]
+        for symbol, holding in holdings.items():
+            quantity = holding["quantity"]
+            total_cost = holding["total_cost"]
+
+            average_cost = total_cost / quantity
 
             results.append(
                 HoldingResponse(
-                    symbol=holding["symbol"],
-                    quantity=holding["quantity"],
+                    symbol=symbol,
+                    quantity=quantity,
                     average_cost=average_cost,
-                    cost_basis=holding["total_cost"],
+                    cost_basis=total_cost,
                     currency=holding["currency"],
                 )
             )
