@@ -1,4 +1,5 @@
 from uuid import UUID
+from decimal import Decimal
 
 from app.exceptions.account import AccountNotFoundError
 from app.exceptions.transaction import (
@@ -36,6 +37,8 @@ class TransactionService:
             raise AccountNotFoundError("Account not found.")
 
         self._validate_transaction(transaction_data)
+
+        self._validate_sell_quantity(account_id, transaction_data)
 
         transaction = Transaction(
             account_id=account_id,
@@ -156,3 +159,35 @@ class TransactionService:
 
         if transaction_data.fees is not None and transaction_data.fees < 0:
             raise InvalidTransactionError("Fees cannot be negative.")
+
+    def _validate_sell_quantity(
+        self,
+        account_id: UUID,
+        transaction_data: TransactionCreate,
+    ) -> None:
+        """Ensure a SELL transaction does not exceed current holdings."""
+
+        if transaction_data.transaction_type != TransactionType.SELL:
+            return
+
+        transactions = self.transaction_repository.list_by_account(account_id)
+
+        owned_quantity = Decimal("0")
+
+        for transaction in transactions:
+            if transaction.symbol != transaction_data.symbol:
+                continue
+
+            quantity = transaction.quantity or Decimal("0")
+
+            if transaction.transaction_type == TransactionType.BUY:
+                owned_quantity += quantity
+            elif transaction.transaction_type == TransactionType.SELL:
+                owned_quantity -= quantity
+
+        sell_quantity = transaction_data.quantity or Decimal("0")
+
+        if sell_quantity > owned_quantity:
+            raise InvalidTransactionError(
+                "Cannot sell more shares than currently held."
+            )

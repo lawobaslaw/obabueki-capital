@@ -4,7 +4,7 @@ from uuid import uuid4
 from fastapi.testclient import TestClient
 
 from app.main import app
-from tests.helpers import auth_headers, create_account
+from tests.helpers import auth_headers, create_account, create_transaction
 
 client = TestClient(app)
 
@@ -674,3 +674,33 @@ def test_fee_cannot_be_negative():
     )
 
     assert response.status_code == 400
+
+
+def test_cannot_sell_more_than_owned():
+    headers = auth_headers()
+
+    account_id = create_account(headers)
+
+    # Buy 10 shares
+    create_transaction(
+        headers=headers,
+        account_id=account_id,
+    )
+
+    # Attempt to sell 20 shares
+    response = client.post(
+        f"/transactions/account/{account_id}",
+        headers=headers,
+        json={
+            "transaction_type": "SELL",
+            "symbol": "AAPL",
+            "quantity": "20",
+            "price": "160",
+            "fees": "0.00",
+            "currency": "GBP",
+            "transaction_date": datetime.now(UTC).isoformat(),
+        },
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == ("Cannot sell more shares than currently held.")
