@@ -37,19 +37,10 @@ class HoldingService:
         holdings: dict[str, dict[str, Decimal | str]] = {}
 
         for transaction in transactions:
-            if transaction.transaction_type.name != "BUY":
-                continue
-
             if transaction.symbol is None:
                 continue
 
             symbol = transaction.symbol
-
-            quantity = transaction.quantity or Decimal("0")
-            price = transaction.price or Decimal("0")
-            fees = transaction.fees or Decimal("0")
-
-            total_cost = (quantity * price) + fees
 
             if symbol not in holdings:
                 holdings[symbol] = {
@@ -58,15 +49,34 @@ class HoldingService:
                     "currency": transaction.currency,
                 }
 
-            holdings[symbol]["quantity"] += quantity
-            holdings[symbol]["total_cost"] += total_cost
+            quantity = transaction.quantity or Decimal("0")
+            price = transaction.price or Decimal("0")
+            fees = transaction.fees or Decimal("0")
+
+            if transaction.transaction_type.name == "BUY":
+                holdings[symbol]["quantity"] += quantity
+                holdings[symbol]["total_cost"] += (quantity * price) + fees
+
+            elif transaction.transaction_type.name == "SELL":
+                current_quantity = holdings[symbol]["quantity"]
+
+                if current_quantity == 0:
+                    continue
+
+                average_cost = holdings[symbol]["total_cost"] / current_quantity
+
+                holdings[symbol]["quantity"] -= quantity
+                holdings[symbol]["total_cost"] -= average_cost * quantity
 
         results: list[HoldingResponse] = []
 
         for symbol, holding in holdings.items():
             quantity = holding["quantity"]
-            total_cost = holding["total_cost"]
 
+            if quantity <= 0:
+                continue
+
+            total_cost = holding["total_cost"]
             average_cost = total_cost / quantity
 
             results.append(
