@@ -28,7 +28,7 @@ class HoldingService:
         if account is None:
             raise AccountNotFoundError("Account not found.")
 
-        if account.user_id != current_user.id:
+        if account.portfolio.user_id != current_user.id:
             raise AccountNotFoundError("Account not found.")
 
         transactions = self.transaction_repository.list_by_account(account_id)

@@ -15,6 +15,7 @@ from app.repositories.account_repository import AccountRepository
 from app.services.account_service import AccountService
 from app.repositories.transaction_repository import TransactionRepository
 from app.services.transaction_service import TransactionService
+from app.services.holding_service import HoldingService
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login",
@@ -121,4 +122,20 @@ def get_transaction_service(
     return TransactionService(
         account_repository=account_repository,
         transaction_repository=transaction_repository,
+    )
+
+
+def get_holding_service(
+    transaction_repository: TransactionRepository = Depends(
+        get_transaction_repository,
+    ),
+    account_repository: AccountRepository = Depends(
+        get_account_repository,
+    ),
+) -> HoldingService:
+    """Return a HoldingService."""
+
+    return HoldingService(
+        transaction_repository=transaction_repository,
+        account_repository=account_repository,
     )
