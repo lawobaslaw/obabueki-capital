@@ -53,6 +53,7 @@ def test_get_account_valuation_returns_portfolio_valuation():
     # Assert
     assert isinstance(valuation, PortfolioValuation)
     assert valuation.current_value == Decimal("4050")
+    assert valuation.total_invested == Decimal("3500")
 
     holding_service.list_by_account.assert_called_once_with(
         account_id,

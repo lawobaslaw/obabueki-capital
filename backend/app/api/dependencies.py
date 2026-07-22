@@ -16,6 +16,8 @@ from app.services.account_service import AccountService
 from app.repositories.transaction_repository import TransactionRepository
 from app.services.transaction_service import TransactionService
 from app.services.holding_service import HoldingService
+from app.services.price_service import PriceService
+from app.services.valuation_service import ValuationService
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login",
@@ -138,4 +140,26 @@ def get_holding_service(
     return HoldingService(
         transaction_repository=transaction_repository,
         account_repository=account_repository,
+    )
+
+
+def get_price_service() -> PriceService:
+    """Return a PriceService."""
+
+    return PriceService()
+
+
+def get_valuation_service(
+    holding_service: HoldingService = Depends(
+        get_holding_service,
+    ),
+    price_service: PriceService = Depends(
+        get_price_service,
+    ),
+) -> ValuationService:
+    """Return a ValuationService."""
+
+    return ValuationService(
+        holding_service=holding_service,
+        price_service=price_service,
     )
