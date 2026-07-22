@@ -23,7 +23,12 @@ class PortfolioRepository:
         return self.session.scalar(statement)
 
     def list_by_user_id(self, user_id: UUID) -> list[Portfolio]:
-        statement = select(Portfolio).where(Portfolio.user_id == user_id)
+        statement = (
+            select(Portfolio)
+            .where(Portfolio.user_id == user_id)
+            .order_by(Portfolio.created_at)
+        )
+
         return self.session.scalars(statement).all()
 
     def save(
