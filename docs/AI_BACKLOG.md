@@ -20,3 +20,5 @@
 - [ ] Portfolio valuation
 - [ ] CSV import
 - [ ] Consider renaming total_gain to unrealised_gain
+
+D1.2 – Add Docker build verification to the CI pipeline

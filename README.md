@@ -2,12 +2,14 @@
 
 [![CI Status](https://github.com/lawobaslaw/obabueki-capital/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/lawobaslaw/obabueki-capital/actions/workflows/backend-ci.yml)
 
-> A modern portfolio management platform built with FastAPI and modern DevOps practices.
+> A cloud-native portfolio management platform built with FastAPI, Microsoft Azure and modern DevOps practices.
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Latest-009688)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED)
 ![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-success)
+![Azure](https://img.shields.io/badge/Azure-Container_Apps-0078D4)
+![Azure](https://img.shields.io/badge/ACR-Private_Registry-0078D4)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Status](https://img.shields.io/badge/Status-Active_Development-orange)
 
@@ -15,14 +17,32 @@
 
 ## Overview
 
-Obabueki Capital is a portfolio management platform built as a long-term engineering project to develop production-grade Backend, Cloud and DevOps skills while solving a real investment tracking problem.
+Obabueki Capital is a backend-first portfolio management platform built as a long-term software engineering project to develop production-grade Backend, Cloud and DevOps skills while solving a real investment tracking problem.
 
-The project is being developed incrementally using **Test-Driven Development (TDD)**, **Layered Architecture**, **Docker**, **GitHub Actions**, and **Azure** while documenting engineering decisions through Architecture Decision Records (ADRs).
+The project is developed incrementally using:
+
+- Test-Driven Development (TDD)
+- Layered Architecture
+- Docker
+- GitHub Actions
+- Microsoft Azure
+
+while documenting engineering decisions through Architecture Decision Records (ADRs).
 
 The application serves two purposes:
 
-1. Build a production-quality portfolio management platform.
+1. Build a production-quality investment portfolio management platform.
 2. Demonstrate modern Backend, Cloud and DevOps engineering practices.
+
+---
+
+## Live Demo
+
+The backend API is currently deployed to Microsoft Azure Container Apps.
+
+- API: <https://ca-obabueki-capital-api.salmonmoss-e10d18e7.uksouth.azurecontainerapps.io>
+- Swagger UI: <https://ca-obabueki-capital-api.salmonmoss-e10d18e7.uksouth.azurecontainerapps.io/docs>
+- Health Check: <https://ca-obabueki-capital-api.salmonmoss-e10d18e7.uksouth.azurecontainerapps.io/health>
 
 ---
 
@@ -35,7 +55,7 @@ I wanted a single application capable of tracking investments across multiple pl
 - Nigerian Exchange (NGX)
 - Future brokerage accounts
 
-Rather than building a demo project, I chose to build software that solves a real problem while serving as a long-term DevOps and Cloud Engineering portfolio.
+Rather than building another demo application, I chose to build software that solves a real problem while serving as a long-term Backend, Cloud and DevOps portfolio.
 
 ---
 
@@ -60,19 +80,23 @@ Rather than building a demo project, I chose to build software that solves a rea
 
 ## DevOps
 
-| Capability             | Status |
-| ---------------------- | :----: |
-| Docker                 |   ✅   |
-| Docker Compose         |   ✅   |
-| GitHub Actions CI      |   ✅   |
-| Ruff                   |   ✅   |
-| Black                  |   ✅   |
-| Pytest                 |   ✅   |
-| Azure Deployment       |   🚧   |
-| Infrastructure as Code |   🚧   |
-| Monitoring             |   🚧   |
-| Logging                |   🚧   |
-| Continuous Deployment  |   🚧   |
+| Capability               | Status |
+| ------------------------ | :----: |
+| Docker                   |   ✅   |
+| Docker Compose           |   ✅   |
+| GitHub Actions CI        |   ✅   |
+| Ruff                     |   ✅   |
+| Black                    |   ✅   |
+| Pytest                   |   ✅   |
+| Azure Container Registry |   ✅   |
+| Azure Container Apps     |   ✅   |
+| Managed Identity         |   ✅   |
+| Azure RBAC               |   ✅   |
+| Azure Deployment         |   ✅   |
+| Continuous Deployment    |   🚧   |
+| Infrastructure as Code   |   🚧   |
+| Monitoring               |   🚧   |
+| Logging                  |   🚧   |
 
 ---
 
@@ -96,44 +120,82 @@ Repositories
 Database
 ```
 
-Each layer has a single responsibility, making the application easier to test and maintain.
+Each layer has a single responsibility, making the application easier to understand, test and maintain.
+
+---
+
+## Cloud Architecture
+
+```text
+                    GitHub
+
+                       │
+
+              GitHub Actions (CI)
+
+                       │
+
+                Docker Image
+
+                       │
+
+                       ▼
+
+       Azure Container Registry
+
+                       │
+
+                       ▼
+
+       Azure Container Apps
+
+                       │
+
+                       ▼
+
+          FastAPI Backend API
+
+                       │
+
+                       ▼
+
+     Azure PostgreSQL (planned)
+```
 
 ---
 
 ## Technology Stack
 
-### Backend
+## Backend
 
 - FastAPI
 - SQLAlchemy
 - Alembic
-- PostgreSQL
+- PostgreSQL (planned)
 - Pydantic
 
-### Testing
+## Testing
 
 - Pytest
 - Mocking
 - Test-Driven Development (TDD)
 
-### Code Quality
+## Code Quality
 
 - Ruff
 - Black
 
-### DevOps (used)
+## DevOps Cloud
 
 - Docker
 - Docker Compose
 - GitHub Actions
-
-### Cloud (Current Focus)
-
 - Azure Container Registry
 - Azure Container Apps
-- Azure PostgreSQL
-- GitHub Actions CD
-- Infrastructure as Code (planned)
+
+## Cloud
+
+- Microsoft Azure
 
 ---
 
@@ -153,22 +215,40 @@ This project follows:
 
 ## Engineering Process
 
-This project is developed using a documented engineering process.
+Development follows a documented engineering process.
 
-For the project's vision, engineering principles, roadmap, and definition of done, see:
+For the project's vision, engineering principles, roadmap and Definition of Done, see:
 
-📄 **docs/PROJECT_CHARTER.md**
+```test
+docs/PROJECT_CHARTER.md
+```
 
 ---
 
 ## Running Locally
 
+Clone the repository.
+
 ```bash
 git clone https://github.com/lawobaslaw/obabueki-capital.git
 
 cd obabueki-capital
+```
 
+## Docker
+
+```bash
 docker compose up --build
+```
+
+## Local Development
+
+```bash
+python -m venv .venv
+
+pip install -r backend/requirements.txt
+
+uvicorn app.main:app --reload
 ```
 
 ---
@@ -185,35 +265,26 @@ black --check .
 
 ---
 
-## Roadmap
+## Azure Deployment
 
-### ✅ v0.7.0
+The backend is currently deployed to Microsoft Azure using:
 
-- Portfolio valuation
-- Portfolio summary
-- Price service
-- Improved testing
+- Azure Container Registry (ACR)
+- Azure Container Apps
+- Managed Identity
+- Azure RBAC (AcrPull)
 
-### 🚧 v0.8.0 (Current Milestone)
+API documentation is available through the deployed application:
 
-Cloud Ready
+```test
+https://<container-app-url>/docs
+```
 
-- Azure deployment
-- GitHub Actions CD
-- Azure Container Registry
-- Infrastructure as Code
-- Monitoring
-- Logging
+Deployment documentation:
 
-### 🔮 Future
-
-- Portfolio performance
-- Dashboard
-- Dividend tracking
-- CSV import
-- Live market data
-- Reporting
-- AI-powered portfolio insights
+```text
+docs/azure-deployment.md
+```
 
 ---
 
@@ -223,6 +294,7 @@ Cloud Ready
 backend/
 frontend/
 docs/
+infrastructure/
 .github/
 docker-compose.yml
 README.md
@@ -230,13 +302,49 @@ README.md
 
 ---
 
+## Roadmap
+
+### ✅ v0.8.0-alpha — First Cloud Deployment
+
+- Azure Container Registry
+- Azure Container Apps
+- Managed Identity
+- Azure RBAC
+- Public HTTPS deployment
+
+---
+
+### 🚧 v0.9.0-beta — Production Readiness
+
+- Azure PostgreSQL
+- Environment Variables
+- Alembic Migrations
+- GitHub Actions Continuous Deployment
+- Monitoring
+- Logging
+
+---
+
+### 🔮 v1.0.0
+
+- Portfolio Performance
+- Asset Allocation
+- Dividend Tracking
+- Dashboard
+- CSV Import
+- Live Market Data
+- AI-powered Portfolio Insights
+- Infrastructure as Code
+
+---
+
 ## Learning Journey
 
-This repository documents my transition towards becoming a DevOps / Cloud Engineer.
+This repository documents my journey towards becoming a Backend, Cloud and DevOps Engineer.
 
-Every feature is developed incrementally, tested thoroughly, and reviewed before moving on to the next milestone.
+Every feature is developed incrementally, tested thoroughly and reviewed before moving to the next milestone.
 
-The goal is not simply to build software, but to demonstrate professional engineering practices from development through deployment.
+The objective is not simply to build software, but to demonstrate professional engineering practices from development through deployment and operations.
 
 ---
 
