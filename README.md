@@ -1,4 +1,5 @@
 # Obabueki Capital
+
 [![CI Status](https://github.com/lawobaslaw/obabueki-capital/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/lawobaslaw/obabueki-capital/actions/workflows/backend-ci.yml)
 
 > A modern portfolio management platform built with FastAPI and modern DevOps practices.
@@ -14,7 +15,7 @@
 
 ## Overview
 
-Obabueki Capital is a personal investment portfolio management platform designed to consolidate investments across multiple brokers, exchanges, and asset classes into a single application.
+Obabueki Capital is a portfolio management platform built as a long-term engineering project to develop production-grade Backend, Cloud and DevOps skills while solving a real investment tracking problem.
 
 The project is being developed incrementally using **Test-Driven Development (TDD)**, **Layered Architecture**, **Docker**, **GitHub Actions**, and **Azure** while documenting engineering decisions through Architecture Decision Records (ADRs).
 
@@ -25,7 +26,7 @@ The application serves two purposes:
 
 ---
 
-# Why I Built This
+## Why I Built This
 
 I wanted a single application capable of tracking investments across multiple platforms including:
 
@@ -38,48 +39,48 @@ Rather than building a demo project, I chose to build software that solves a rea
 
 ---
 
-# Current Project Status
+## Current Project Status
 
 ## Product
 
-| Feature | Status |
-|---------|:------:|
-| Authentication | ✅ |
-| Portfolio Management | ✅ |
-| Account Management | ✅ |
-| Transaction Management | ✅ |
-| Holdings Engine | ✅ |
-| Price Service | ✅ |
-| Account Valuation | ✅ |
-| Portfolio Summary | ✅ |
-| Portfolio Performance | 🚧 |
-| Dashboard | 🚧 |
+| Feature                | Status |
+| ---------------------- | :----: |
+| Authentication         |   ✅   |
+| Portfolio Management   |   ✅   |
+| Account Management     |   ✅   |
+| Transaction Management |   ✅   |
+| Holdings Engine        |   ✅   |
+| Price Service          |   ✅   |
+| Account Valuation      |   ✅   |
+| Portfolio Summary      |   ✅   |
+| Portfolio Performance  |   🚧   |
+| Dashboard              |   🚧   |
 
 ---
 
 ## DevOps
 
-| Capability | Status |
-|------------|:------:|
-| Docker | ✅ |
-| Docker Compose | ✅ |
-| GitHub Actions CI | ✅ |
-| Ruff | ✅ |
-| Black | ✅ |
-| Pytest | ✅ |
-| Azure Deployment | 🚧 |
-| Infrastructure as Code | 🚧 |
-| Monitoring | 🚧 |
-| Logging | 🚧 |
-| Continuous Deployment | 🚧 |
+| Capability             | Status |
+| ---------------------- | :----: |
+| Docker                 |   ✅   |
+| Docker Compose         |   ✅   |
+| GitHub Actions CI      |   ✅   |
+| Ruff                   |   ✅   |
+| Black                  |   ✅   |
+| Pytest                 |   ✅   |
+| Azure Deployment       |   🚧   |
+| Infrastructure as Code |   🚧   |
+| Monitoring             |   🚧   |
+| Logging                |   🚧   |
+| Continuous Deployment  |   🚧   |
 
 ---
 
-# Architecture
+## Architecture
 
 The backend follows a layered architecture.
 
-```
+```text
 API
  │
  ▼
@@ -99,7 +100,7 @@ Each layer has a single responsibility, making the application easier to test an
 
 ---
 
-# Technology Stack
+## Technology Stack
 
 ### Backend
 
@@ -120,7 +121,7 @@ Each layer has a single responsibility, making the application easier to test an
 - Ruff
 - Black
 
-### DevOps
+### DevOps (used)
 
 - Docker
 - Docker Compose
@@ -136,7 +137,7 @@ Each layer has a single responsibility, making the application easier to test an
 
 ---
 
-# Engineering Principles
+## Engineering Principles
 
 This project follows:
 
@@ -160,7 +161,7 @@ For the project's vision, engineering principles, roadmap, and definition of don
 
 ---
 
-# Running Locally
+## Running Locally
 
 ```bash
 git clone https://github.com/lawobaslaw/obabueki-capital.git
@@ -172,7 +173,7 @@ docker compose up --build
 
 ---
 
-# Running Tests
+## Running Tests
 
 ```bash
 pytest
@@ -184,16 +185,16 @@ black --check .
 
 ---
 
-# Roadmap
+## Roadmap
 
-## ✅ v0.7.0
+### ✅ v0.7.0
 
 - Portfolio valuation
 - Portfolio summary
 - Price service
 - Improved testing
 
-## 🚧 v0.8.0 (Current Milestone)
+### 🚧 v0.8.0 (Current Milestone)
 
 Cloud Ready
 
@@ -204,7 +205,7 @@ Cloud Ready
 - Monitoring
 - Logging
 
-## 🔮 Future
+### 🔮 Future
 
 - Portfolio performance
 - Dashboard
@@ -216,9 +217,9 @@ Cloud Ready
 
 ---
 
-# Repository Structure
+## Repository Structure
 
-```
+```text
 backend/
 frontend/
 docs/
@@ -229,7 +230,7 @@ README.md
 
 ---
 
-# Learning Journey
+## Learning Journey
 
 This repository documents my transition towards becoming a DevOps / Cloud Engineer.
 
@@ -239,6 +240,6 @@ The goal is not simply to build software, but to demonstrate professional engine
 
 ---
 
-# License
+## License
 
 This project is licensed under the MIT License.

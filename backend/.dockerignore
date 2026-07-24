@@ -24,7 +24,18 @@ htmlcov/
 .idea/
 .DS_Store
 
+# Alembic cache
+.mypy_cache/
 
+# Local database
+instance/
+
+# Git
+.git
+.gitignore
+
+# Logs
+*.log
 
 
 .ruff_cache
