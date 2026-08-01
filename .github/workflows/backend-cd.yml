@@ -23,7 +23,7 @@ jobs:
     # Safety Check: Only execute deployment if the upstream CI workflow succeeded
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-    # Restricts the maximum time this deployment job can execute to prevent runaway billing
+    # Prevent hung deployments
     timeout-minutes: 20
 
     # Links this execution context to your GitHub environment targets
@@ -51,7 +51,7 @@ jobs:
         run: |
           az acr login --name ${{ secrets.AZURE_ACR_NAME }}
 
-      # Builds the image once and assigns both the Commit SHA and Latest tags
+      # Build and tag image
       - name: Build Docker image
         run: |
           docker build \
@@ -79,11 +79,17 @@ jobs:
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --image ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-      # Pauses briefly for container orchestration and route assignment
-      - name: Wait for deployment
-        run: sleep 30
-
-      # Verifies the live container routing environment is responding cleanly
-      - name: Smoke Test
+      # Dynamic polling loop replacing the fixed sleep timer
+      - name: Wait for deployment and Smoke Test
         run: |
-          curl --fail https://ca-obabueki-capital-api.salmonmoss-e10d18e7.uksouth.azurecontainerapps.io/health
+          echo "Starting health check polling..."
+          for i in {1..12}; do
+            if curl --fail --silent --show-error https://ca-obabueki-capital-api.salmonmoss-e10d18e7.uksouth.azurecontainerapps.io/health; then
+              echo "Backend deployment is healthy and responsive!"
+              exit 0
+            fi
+            echo "Endpoint not ready yet, retrying in 10 seconds... (Attempt $i/12)"
+            sleep 10
+          done
+          echo "Error: Health check timed out after 2 minutes."
+          exit 1
