@@ -1,9 +1,15 @@
 name: Backend CD
 
 on:
-  push:
-    branches:
-      - develop
+  workflow_run:
+    workflows: ["Backend CI"]
+    types:
+      - completed
+
+# Protects against simultaneous deployment clashes by cancelling older pending runs
+concurrency:
+  group: backend-deploy
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -14,6 +20,15 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Safety Check: Only execute deployment if the upstream CI workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    # Restricts the maximum time this deployment job can execute to prevent runaway billing
+    timeout-minutes: 20
+
+    # Links this execution context to your GitHub environment targets
+    environment:
+      name: development
 
     defaults:
       run:
@@ -22,6 +37,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # Set up Docker Buildx runner engine
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to Azure
         uses: azure/login@v2
@@ -32,20 +51,39 @@ jobs:
         run: |
           az acr login --name ${{ secrets.AZURE_ACR_NAME }}
 
+      # Builds the image once and assigns both the Commit SHA and Latest tags
       - name: Build Docker image
         run: |
           docker build \
             -t ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -t ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest \
             .
 
-      - name: Push Docker image
+      # Pushes both tagged references to Azure Container Registry
+      - name: Push Docker images
         run: |
-          docker push \
-            ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
+      # Diagnostic print step for deployment tracking
+      - name: Print image
+        run: |
+          echo "Deploying image:"
+          echo "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+
+      # Deploys using the explicit SHA tag for clear tracking in Azure
       - name: Deploy to Azure Container Apps
         run: |
           az containerapp update \
             --name ${{ secrets.AZURE_CONTAINER_APP_NAME }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --image ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      # Pauses briefly for container orchestration and route assignment
+      - name: Wait for deployment
+        run: sleep 30
+
+      # Verifies the live container routing environment is responding cleanly
+      - name: Smoke Test
+        run: |
+          curl --fail https://ca-obabueki-capital-api.salmonmoss-e10d18e7.uksouth.azurecontainerapps.io/health
