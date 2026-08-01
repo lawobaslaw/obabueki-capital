@@ -4,10 +4,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str
+    app_name: str = "Obabueki Capital"
     database_url: str
-    environment: str
-    debug: bool
+    environment: str = "development"
+    debug: bool = False
 
     secret_key: str
     access_token_expire_minutes: int = 30

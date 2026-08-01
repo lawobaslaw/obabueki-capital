@@ -1,0 +1,279 @@
+id: /subscriptions/f8eae92b-78e4-4c2b-9655-32da50418c3c/resourceGroups/rg-obabueki-capital-dev-uksouth/providers/Microsoft.App/containerapps/ca-obabueki-capital-api
+identity:
+  principalId: 89d26cd6-8598-43d0-827a-e4e0ff5660e4
+  tenantId: 4bd52f14-06fb-4559-a452-f79a4e6dfed2
+  type: SystemAssigned
+location: UK South
+name: ca-obabueki-capital-api
+properties:
+  configuration:
+    activeRevisionsMode: Single
+    dapr: null
+    identitySettings: []
+    ingress:
+      additionalPortMappings: null
+      allowInsecure: false
+      clientCertificateMode: null
+      corsPolicy: null
+      customDomains: null
+      exposedPort: 0
+      external: true
+      fqdn: ca-obabueki-capital-api.salmonmoss-e10d18e7.uksouth.azurecontainerapps.io
+      ipSecurityRestrictions: null
+      stickySessions: null
+      targetPort: 8000
+      traffic:
+        - latestRevision: true
+          weight: 100
+      transport: Auto
+    maxInactiveRevisions: 100
+    registries:
+      - identity: system
+        passwordSecretRef: ""
+        server: acrobabuekicapital.azurecr.io
+        username: ""
+    runtime: null
+    secrets:
+      - name: database-url
+      - name: secret-key
+    service: null
+  customDomainVerificationId: CA839081B748F8B2D4967D01713161C1A40429C9B003154C2392738EBA55A838
+  delegatedIdentities: []
+  environmentId: /subscriptions/f8eae92b-78e4-4c2b-9655-32da50418c3c/resourceGroups/rg-obabueki-capital-dev-uksouth/providers/Microsoft.App/managedEnvironments/cae-obabueki-capital-dev
+  eventStreamEndpoint: https://uksouth.azurecontainerapps.dev/subscriptions/f8eae92b-78e4-4c2b-9655-32da50418c3c/resourceGroups/rg-obabueki-capital-dev-uksouth/containerApps/ca-obabueki-capital-api/eventstream
+  latestReadyRevisionName: ca-obabueki-capital-api--0000008
+  latestRevisionFqdn: ca-obabueki-capital-api--0000008.salmonmoss-e10d18e7.uksouth.azurecontainerapps.io
+  latestRevisionName: ca-obabueki-capital-api--0000008
+  managedEnvironmentId: /subscriptions/f8eae92b-78e4-4c2b-9655-32da50418c3c/resourceGroups/rg-obabueki-capital-dev-uksouth/providers/Microsoft.App/managedEnvironments/cae-obabueki-capital-dev
+  outboundIpAddresses:
+    - 20.90.238.99
+    - 20.90.239.180
+    - 20.108.130.227
+    - 20.108.130.191
+    - 85.210.25.6
+    - 85.210.24.221
+    - 4.158.34.249
+    - 20.162.138.167
+    - 4.158.113.223
+    - 4.159.3.89
+    - 85.210.163.187
+    - 74.177.240.109
+    - 172.166.80.179
+    - 131.145.9.241
+    - 85.210.166.17
+    - 85.210.48.136
+    - 74.177.120.102
+    - 131.145.48.93
+    - 85.210.163.208
+    - 74.177.193.62
+    - 51.142.67.19
+    - 20.254.83.139
+    - 131.145.82.22
+    - 20.254.83.138
+    - 4.158.232.14
+    - 172.166.87.38
+    - 74.177.226.250
+    - 51.143.239.87
+    - 20.26.108.244
+    - 20.26.108.252
+    - 131.145.77.75
+    - 4.250.91.55
+    - 145.133.122.30
+    - 4.158.222.211
+    - 20.26.144.50
+    - 20.26.67.125
+    - 20.26.246.111
+    - 20.26.246.35
+    - 172.187.108.20
+    - 20.26.250.81
+    - 20.26.250.99
+    - 131.145.83.80
+    - 74.177.194.2
+    - 172.187.108.17
+    - 74.177.194.1
+    - 4.250.253.31
+    - 20.108.136.221
+    - 4.158.53.230
+    - 131.145.77.65
+    - 4.159.26.200
+    - 4.158.168.140
+    - 131.145.48.41
+    - 131.145.48.38
+    - 4.159.26.91
+    - 4.158.141.66
+    - 145.133.122.37
+    - 74.177.194.6
+    - 85.210.188.76
+    - 4.250.250.188
+    - 20.49.128.191
+    - 40.81.157.22
+    - 20.26.245.140
+    - 4.250.114.255
+    - 20.26.250.83
+    - 4.158.140.21
+    - 4.159.26.106
+    - 51.143.239.94
+    - 85.210.188.61
+    - 51.143.239.98
+    - 20.26.250.15
+    - 74.177.208.14
+    - 145.133.120.159
+    - 4.250.114.142
+    - 20.49.133.152
+    - 20.26.68.11
+    - 172.166.14.0
+    - 4.250.8.103
+    - 4.158.168.143
+    - 20.26.66.214
+    - 172.166.13.240
+    - 20.108.216.9
+    - 20.108.217.125
+    - 20.108.124.221
+    - 20.108.125.221
+    - 4.159.25.18
+    - 4.158.92.46
+    - 20.162.145.125
+    - 4.158.143.149
+    - 4.158.143.92
+    - 4.250.234.44
+    - 74.177.201.70
+    - 131.145.91.209
+    - 4.158.91.74
+    - 4.158.89.64
+    - 131.145.40.6
+    - 74.177.198.189
+    - 85.210.223.160
+    - 74.177.245.93
+    - 74.177.198.181
+    - 131.145.77.209
+    - 74.177.162.123
+    - 20.26.109.122
+    - 131.145.124.57
+    - 85.210.222.64
+    - 20.26.109.180
+    - 74.177.141.127
+    - 85.210.223.56
+    - 74.177.245.142
+    - 131.145.83.126
+    - 131.145.99.107
+    - 172.187.108.24
+    - 20.254.72.95
+    - 4.250.253.34
+    - 20.26.247.175
+    - 20.117.218.107
+    - 4.159.112.109
+    - 20.254.72.120
+    - 172.187.108.49
+    - 20.108.98.127
+    - 85.210.186.119
+    - 20.90.236.2
+    - 4.158.31.99
+    - 172.166.14.46
+    - 20.117.217.11
+    - 4.250.253.165
+    - 20.108.96.53
+    - 131.145.22.42
+    - 131.145.77.79
+    - 85.210.217.254
+    - 74.177.176.92
+    - 74.177.176.39
+    - 131.145.123.38
+    - 131.145.27.164
+    - 20.108.98.126
+    - 4.158.31.97
+    - 4.159.112.99
+    - 4.250.91.246
+    - 74.177.208.61
+    - 4.158.41.114
+    - 74.177.240.120
+    - 20.108.98.136
+    - 20.117.217.10
+    - 4.159.112.15
+    - 4.159.112.112
+    - 74.177.246.192
+    - 4.250.116.12
+    - 4.158.43.131
+    - 172.166.14.41
+    - 74.177.178.113
+    - 145.133.58.244
+    - 4.158.31.84
+    - 172.187.108.29
+    - 131.145.77.80
+    - 20.26.168.193
+    - 74.177.194.10
+    - 4.158.152.6
+    - 172.166.14.14
+    - 4.250.91.148
+    - 4.250.91.170
+    - 4.250.91.188
+    - 20.117.249.188
+  provisioningState: Succeeded
+  runningStatus: Running
+  template:
+    containers:
+      - env:
+          - name: DATABASE_URL
+            secretRef: database-url
+          - name: SECRET_KEY
+            secretRef: secret-key
+          - name: ENVIRONMENT
+            value: development
+          - name: DEBUG
+            value: "true"
+          - name: APP_NAME
+            value: Obabueki Capital
+          - name: ACCESS_TOKEN_EXPIRE_MINUTES
+            value: "30"
+          - name: ALGORITHM
+            value: HS256
+        image: acrobabuekicapital.azurecr.io/obabueki-capital-api:debug
+        name: ca-obabueki-capital-api
+        resources:
+          cpu: 0.5
+          ephemeralStorage: 2Gi
+          memory: 1Gi
+        probes:
+          - type: Startup
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 12
+
+          - type: Readiness
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+
+          - type: Liveness
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+    initContainers: null
+    revisionSuffix: ""
+    scale:
+      cooldownPeriod: 300
+      maxReplicas: 10
+      minReplicas: null
+      pollingInterval: 30
+      rules: null
+    serviceBinds: null
+    terminationGracePeriodSeconds: null
+    volumes: null
+  workloadProfileName: Consumption
+resourceGroup: rg-obabueki-capital-dev-uksouth
+systemData:
+  createdAt: "2026-07-24T02:46:08.8057787"
+  createdBy: lawlarryobas@icloud.com
+  createdByType: User
+  lastModifiedAt: "2026-08-01T15:29:45.932787"
+  lastModifiedBy: lawlarryobas@icloud.com
+  lastModifiedByType: User
+type: Microsoft.App/containerApps
